@@ -5,7 +5,7 @@ const chaiHttp = require('chai-http');
 const faker = require('faker');
 const mongoose = require('mongoose');
 
-const { seedDatabase, dropDatabase } = require('./common')
+const { seedDatabase, dropDatabase, createFakeArticle } = require('./common')
 
 const expect = chai.expect;
 
@@ -53,7 +53,7 @@ describe('Blog API resource', function() {
         });
       });
 
-      it('should return blog posts with correct fields', function() {
+      xit('should return blog posts with correct fields', function() {
 
         let resBlogPost;
         return chai.request(app)
@@ -85,7 +85,7 @@ describe('Blog API resource', function() {
   describe('POST endpoint', function() {
     xit('should add new post', function() {
 
-      const newArticle = generateBlogData();
+      const newArticle = createFakeArticle();
 
       return chai.request(app)
         .post('/blog-posts')
@@ -113,7 +113,7 @@ describe('Blog API resource', function() {
 
   describe('PUT endpoint', function() {
 
-    xit('should update the fields in the article that were sent', function () {
+    it('should update the fields in the article that were sent', function () {
       const updatedPost = {
         title: 'Serena and her cat',
         content: 'Once there was a girl named Serena. She had a cat. The end.'
@@ -121,11 +121,11 @@ describe('Blog API resource', function() {
       return BlogPost
         .findOne()
         .then(function(post) {
-          updatedPost.id = post.idea;
+          updatedPost.id = post.id;
 
           return chai.request(app)
-            .put(`/blog-post/${blog.id}`)
-            .send(updatedPost)
+            .put(`/blog-post/${post.id}`)
+            .send(BlogPost)
         })
         .then(function(res) {
           expect(res).to.have.status(204);
